@@ -8,6 +8,7 @@ Atnaujinta: 2026-11-25
 | 002 | Vykdymo protokolas ir minimalus antraštės pakeitimas | DONE | [002-execution-policy-ui-title.md](002-execution-policy-ui-title.md) |
 | 003 | Darbo protokolo suderinimas | DONE | [003-work-protocol-alignment.md](003-work-protocol-alignment.md) |
 | 004 | Duomenų bazės modeliai | DONE | [004-database-models.md](004-database-models.md) |
+| 005 | Excel failo pasirinkimas ir struktūros analizė | DONE | [005-excel-structure.md](005-excel-structure.md) |
 
 > 001 antro etapo senasis planas pakeistas universaliu Excel importavimu pagal ADR-007.
 > Originalus tiekėjo Excel pavyzdys jau gautas. Istorinis 001 užduoties įrašas nekeistas.

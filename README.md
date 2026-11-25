@@ -1,13 +1,13 @@
 # goods-import
 
-„Windows“ programa tiekėjo Excel pakavimo sąrašui importuoti. **Šiuo metu tai 1 etapo
-skeletas:** darbo tvarka, Electron + React + TypeScript klientas ir TypeScript API su
-Prisma schema. Excel skaitymo ir importo logikos dar nėra.
+„Windows“ programa tiekėjo Excel pakavimo sąrašui importuoti. **Šiuo metu veikia Excel
+failo pasirinkimas ir struktūros analizė:** darbo tvarka, Electron + React + TypeScript
+klientas ir TypeScript API su Prisma schema. Importo logikos dar nėra.
 
-**Būsena:** 1 etapas — `DONE` (priimta 2026-11-25); 2 etapas — `BLOCKED` (laukiama
-originalaus tiekėjo Excel failo).
+**Būsena:** 005 — `DONE` (Excel failo pasirinkimas ir struktūros analizė, priimta
+2026-11-25). Importo logika dar neįgyvendinta.
 
-![Excel importo ekrano skeletas](docs/screenshots/001-excel-import-skeleton.png)
+![1 etapo ekrano skeletas (istorinė kopija)](docs/screenshots/001-excel-import-skeleton.png)
 
 - **Užduočių registras:** [docs/tasks/README.md](docs/tasks/README.md)
 - **Sprendimai:** [docs/decisions.md](docs/decisions.md)
@@ -163,11 +163,9 @@ apps/
 
 ## Excel pavyzdys
 
-**Originalaus tiekėjo pakavimo sąrašo dar neturime** — repozitorijoje nėra jokio `.xlsx`
-failo. Kad galėtume įgyvendinti importą, reikia failo ir sutarti: lapo pavadinimą,
-privalomus stulpelius, eilučių skaičių, barkodo bei kainos formatus. BRIO importo
-šablonas tam netinka — jis skirtas kitam etapui. Tai užfiksuota kaip 2 etapo blokas
-[užduotyje](docs/tasks/001-project-harness-skeleton.md).
+Originalus tiekėjo Excel pavyzdys jau gautas. 005 metu programa sėkmingai nuskaitė visus
+4 lapus; importo formatas grindžiamas ADR-007 universaliu laukų susiejimu. Detalesni
+praktinės patikros rezultatai — [005 užduotyje](docs/tasks/005-excel-structure.md).
 
 ## Būsenos
 

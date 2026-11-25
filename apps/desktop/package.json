@@ -13,6 +13,7 @@
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json"
   },
   "dependencies": {
+    "exceljs": "4.4.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
