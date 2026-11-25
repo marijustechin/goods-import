@@ -1,0 +1,36 @@
+// Laikini modeliai. Galutiniai laukai bus patvirtinti gavus tiekėjo Excel pavyzdį.
+// Kol kas modeliai atspindi tik importo paketo ir eilutės auditą.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ImportBatch {
+  id        String      @id @default(cuid())
+  fileName  String
+  rowCount  Int
+  createdAt DateTime    @default(now())
+  rows      ImportRow[]
+
+  @@map("import_batches")
+}
+
+model ImportRow {
+  id        String      @id @default(cuid())
+  batchId   String
+  sourceRow Int
+  barcode   String
+  price     Decimal
+  raw       Json?
+  createdAt DateTime    @default(now())
+  batch     ImportBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  @@index([batchId])
+  @@index([barcode])
+  @@map("import_rows")
+}
