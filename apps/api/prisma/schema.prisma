@@ -1,5 +1,6 @@
-// Laikini modeliai. Galutiniai laukai bus patvirtinti gavus tiekėjo Excel pavyzdį.
-// Kol kas modeliai atspindi tik importo paketo ir eilutės auditą.
+// Importų ir importuotų prekių modeliai.
+// Fizinės lentelės ir stulpeliai – snake_case; Prisma modeliai – PascalCase.
+// Migracijos ir importo logika nėra šios užduoties dalis.
 
 generator client {
   provider = "prisma-client-js"
@@ -10,27 +11,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model ImportBatch {
-  id        String      @id @default(cuid())
-  fileName  String
-  rowCount  Int
-  createdAt DateTime    @default(now())
-  rows      ImportRow[]
+model Import {
+  id           String   @id @default(uuid()) @db.Uuid
+  importNumber String   @unique @map("import_number")
+  name         String
+  fileName     String   @map("filename")
+  importedAt   DateTime @map("imported_at")
+  rowCount     Int      @map("row_count")
+  fieldMapping Json     @map("field_mapping") @db.JsonB
+  goods        Good[]
 
-  @@map("import_batches")
+  @@map("imports")
 }
 
-model ImportRow {
-  id        String      @id @default(cuid())
-  batchId   String
-  sourceRow Int
-  barcode   String
-  price     Decimal
-  raw       Json?
-  createdAt DateTime    @default(now())
-  batch     ImportBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+model Good {
+  id                String   @id @default(uuid()) @db.Uuid
+  importId          String   @map("import_id") @db.Uuid
+  sourceCode        String   @map("source_code")
+  originalBarcode   String?  @map("original_barcode")
+  quantity          Int
+  sourceRetailPrice Decimal? @map("source_retail_price") @db.Decimal(12, 2)
+  imageUrl          String?  @map("image_url")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
 
-  @@index([batchId])
-  @@index([barcode])
-  @@map("import_rows")
+  code           String?
+  barcode        String?  @unique
+  name           String
+  purchasePrice  Decimal? @map("purchase_price") @db.Decimal(12, 2)
+  retailPrice    Decimal? @map("retail_price") @db.Decimal(12, 2)
+  promotionPrice Decimal? @map("promotion_price") @db.Decimal(12, 2)
+  sku            String?
+  productGroup   String?  @map("product_group")
+  brand          String?
+  collection     String?
+  customsCode    String?  @map("customs_code")
+  grossWeight    Decimal? @map("gross_weight") @db.Decimal(12, 3)
+  netWeight      Decimal? @map("net_weight") @db.Decimal(12, 3)
+
+  importRecord Import @relation(fields: [importId], references: [id], onDelete: Restrict)
+
+  @@unique([importId, sourceCode])
+  @@index([importId])
+  @@index([originalBarcode])
+  @@map("goods")
 }

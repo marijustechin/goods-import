@@ -136,8 +136,8 @@ npm.cmd run prisma:validate
 npm.cmd run prisma:generate
 ```
 
-`schema.prisma` modeliai (`ImportBatch`, `ImportRow`) yra laikini ir bus patikslinti gavus
-tiekėjo Excel pavyzdį. Migracijos dar nekuriamos.
+`schema.prisma` modeliai (`Import`, `Good`) aprašo importus ir importuotas prekes pagal
+ADR-007. Migracijos dar nekuriamos.
 
 ## Struktūra
 

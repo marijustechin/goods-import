@@ -83,3 +83,39 @@ Trumpi architektūriniai sprendimai. Naują sprendimą pridėk numeriuotu įraš
   automatiškai. Aplinkos specifika (Low integrity label, `ELECTRON_RUN_AS_NODE`)
   dokumentuota [environment.md](environment.md), ne app kode.
 
+## ADR-007 — Importų ir prekių duomenų modelis
+
+- **Data:** 2026-11-25
+- **Būsena:** Priimta (žmogaus paskirta 004 užduotis)
+- **Kontekstas:** Originalus tiekėjo Excel pavyzdys jau gautas. Ankstesnis vieno konkretaus
+  formato importo planas keičiamas universaliu importu, kuriame naudotojas pasirenka
+  šaltinio ir DB laukų susiejimą. Importai ir importuotos prekės saugomi PostgreSQL per
+  Prisma.
+- **Sprendimas:**
+  - `imports` lentelė (Prisma `Import`): UUID `id`, unikalus `import_number`, `name`,
+    `filename`, `imported_at`, `row_count` ir privalomas `field_mapping` (`JSONB`).
+  - `goods` lentelė (Prisma `Good`): UUID `id`, UUID `import_id` FK, `source_code`,
+    neprivalomas `original_barcode`, `quantity`, neprivaloma `source_retail_price`,
+    neprivalomas `image_url`, `created_at`, `updated_at` bei eksportuojami laukai.
+  - Vienas importas turi daug prekių. Vieno importo ribose `source_code` yra unikalus:
+    `@@unique([importId, sourceCode])`. Pasikartojančių šaltinio kodų kiekiai bus
+    sumuojami importavimo metu.
+  - Indeksai prekių paieškai: `import_id` ir `original_barcode`.
+  - Kodai, barkodai ir muitinės kodai saugomi kaip tekstas (`String`). Kainos —
+    `Decimal(12,2)`, svoriai — `Decimal(12,3)`.
+  - `barcode` yra unikalus, bet neprivalomas; PostgreSQL leidžia kelias `NULL` reikšmes.
+  - Importo ištrynimas neturi automatiškai ištrinti prekių: FK ryšys naudoja
+    `onDelete: Restrict`.
+  - Prisma modeliai ir laukai — camelCase; fizinės lentelės ir stulpeliai — snake_case
+    per `@@map` / `@map`.
+- **Pasekmės ir apribojimai:**
+  - Šiame etape tik schema; migracijos nevykdomos, DB duomenys netrinami.
+  - Ankstesni laikini modeliai `ImportBatch` / `ImportRow` pakeisti schema, bet jokia
+    migracija nevykdyta.
+  - Excel skaitymas, importo logika, API, barkodų generavimas, importo numerių
+    generavimas, kainodara ir eksportas — vėlesnės užduotys.
+  - `field_mapping` struktūra saugoma `JSONB`, bet DB lygmenyje nėra schemos validacijos.
+  - `row_count` — šaltinio eilučių skaičius prieš grupavimą.
+  - Istoriniai ADR įrašai, įskaitant ADR-005, neperrašomi; šis ADR fiksuoja pasikeitusią
+    prielaidą apie gautą pavyzdį ir universalų susiejimą.
+
